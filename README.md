@@ -5,3 +5,6 @@
 
 ## 1B
 ![image](https://github.com/Sarabeshwaran/CSA4711-DL/assets/113020922/ba25320c-e7f4-4b6d-b702-4bd4d9febdcb)
+
+## 2
+![image](https://github.com/Sarabeshwaran/CSA4711-DL/assets/113020922/a65f9b9a-88fe-4591-a553-d4e792edb0f6)
