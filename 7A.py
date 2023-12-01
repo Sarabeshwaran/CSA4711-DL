@@ -1,41 +1,64 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Function to minimize (you can replace this with any function)
-def objective_function(x):
-    return x**2 + 2*x + 1
+# Generate synthetic data
+np.random.seed(42)
+X = 2 * np.random.rand(100, 1)
+y = 4 + 3 * X + np.random.randn(100, 1)
 
-# Derivative of the function (gradient)
-def gradient(x):
-    return 2*x + 2
+# Plot the data
+plt.scatter(X, y)
+plt.title('Synthetic Data for Linear Regression')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.show()
 
-def gradient_descent(learning_rate, num_iterations, initial_guess):
-    history = []
-    x = initial_guess
+# Function to compute the mean squared error (cost)
+def compute_cost(X, y, theta):
+    m = len(y)
+    predictions = X.dot(theta)
+    cost = (1/(2*m)) * np.sum(np.square(predictions - y))
+    return cost
 
-    for _ in range(num_iterations):
-        grad = gradient(x)
-        x = x - learning_rate * grad
-        history.append(x)
+# Gradient Descent function
+def gradient_descent(X, y, theta, learning_rate, num_iterations):
+    m = len(y)
+    cost_history = np.zeros(num_iterations)
 
-    return history
+    for iteration in range(num_iterations):
+        predictions = X.dot(theta)
+        errors = predictions - y
+        gradient = (1/m) * X.T.dot(errors)
+        theta = theta - learning_rate * gradient
+        cost_history[iteration] = compute_cost(X, y, theta)
 
-# Parameters
-learning_rate = 0.1
-num_iterations = 20
-initial_guess = -5
+    return theta, cost_history
+
+# Add a bias term to X (intercept term)
+X_b = np.c_[np.ones((100, 1)), X]
+
+# Initial parameters
+theta_initial = np.random.randn(2, 1)
+
+# Hyperparameters
+learning_rate = 0.01
+num_iterations = 1000
 
 # Run gradient descent
-path = gradient_descent(learning_rate, num_iterations, initial_guess)
+theta, cost_history = gradient_descent(X_b, y, theta_initial, learning_rate, num_iterations)
 
-# Plot the results
-x_vals = np.linspace(-6, 2, 100)
-y_vals = objective_function(x_vals)
+# Plot the cost history
+plt.plot(range(1, num_iterations + 1), cost_history, color='blue')
+plt.title('Cost History over Iterations')
+plt.xlabel('Iterations')
+plt.ylabel('Cost')
+plt.show()
 
-plt.plot(x_vals, y_vals, label='Objective Function')
-plt.scatter(path, [objective_function(x) for x in path], color='red', label='Gradient Descent Path')
-plt.title('Gradient Descent Optimization')
-plt.xlabel('x')
-plt.ylabel('f(x)')
+# Plot the data and the best-fitting line
+plt.scatter(X, y)
+plt.plot(X, X_b.dot(theta), color='red', label='Linear Regression')
+plt.title('Linear Regression with Gradient Descent')
+plt.xlabel('X')
+plt.ylabel('y')
 plt.legend()
 plt.show()
